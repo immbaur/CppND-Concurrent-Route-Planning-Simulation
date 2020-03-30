@@ -1,41 +1,51 @@
+#ifndef TRUTLE_H
+#define TRUTLE_H
+
 #include <iostream>
 #include <chrono>
 #include <vector>
+#include <mutex>
 
 #include "mystructs.h"
+#include "maphandle.h"
 
 class Turtle {
 
 public:
-  Turtle();
-  void sim();
-  void setColor(Color col);
-
-  double getX();
-  double getY();
-
-  const std::vector<Position> getPath() const;
-
-  Color color = {0,0,0};
+  // constructor
+  Turtle(std::shared_ptr<Map> m, Color c, int i);
+  // public member functions
+  int getId(){return _id;};
+  Color getColor(){return _color;};
+  // TODO
+  Position getCurrentPosition();
+  // TODO
+  Position getDestination();
+  std::vector<Position> getPath();
+  void simulate();
 
 private:
-  // member functions
-  void setX( double X);
-  void setY( double Y);
-
-  // public memeber functions
-  void getNewDestintion();
-//  void setDestination();
+  // private memeber functions
+  void setNewDestintion();
   void planPathToDestination();
   void run();
-
   void goTo(Position pos);
 
-  // member variables
-  Position _start = {0,0};
-  Position _current = {0,0};
-  Position _destination = {0,0};
+  // private member variables
+  int _id;
+  Color _color;
+  Position _currentPos;
+  Position _destination;
 
-  // std::shared_ptr<MapHandle> _mapHandle;
+  std::shared_ptr<Map> _mapHandle;
   std::vector<Position> _pathToDest;
+
+  // mutexes for save reading and writing
+  std::mutex _pos_mutex;
+  std::mutex _dest_mutex;
+  std::mutex _path_mutex;
+
+  static std::mutex _logic_mutex;
 };
+
+#endif
