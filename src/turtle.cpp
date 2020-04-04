@@ -11,6 +11,7 @@ Turtle::Turtle(std::shared_ptr<Map> m, Color c, int i){
   _id = i;
   _color = c;
   _currentPos = _mapHandle->getRandPos(true);
+
   std::cout << "Turtle ID " << _id << ": Muk muk!" << std::endl;
 }
 

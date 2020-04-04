@@ -1,5 +1,5 @@
-#ifndef MAPHANDLE_H
-#define MAPHANDLE_H
+#ifndef MAP_H
+#define MAP_H
 
 #include <iostream>
 #include <fstream>
@@ -13,7 +13,7 @@ class Map{
 
 public:
   // public member functions
-  Map(std::string path);
+  Map(std::string pathToGrid);
 
   void reservePathInMap(std::vector<Position> &path);
 

@@ -1,9 +1,9 @@
-#include "maphandle.h"
+#include "map.h"
 
-Map::Map(std::string path){
+Map::Map(std::string pathToGrid){
   std::lock_guard<std::mutex> lck(_map_mutex);
   _map.clear();
-  std::ifstream myfile (path);
+  std::ifstream myfile (pathToGrid);
   if (myfile) {
     std::string line;
     while (getline(myfile, line)) {
