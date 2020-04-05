@@ -32,9 +32,9 @@ std::vector<Position> Turtle::getPath(){
 
 void Turtle::simulate(){
   while(true){
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::cout << getId() << " -- setNewDestintion" << '\n';
     setNewDestintion();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::cout << getId() << " -- planPathToDestination" << '\n';
     planPathToDestination();
     std::cout << getId() << " -- run" << '\n';
@@ -49,6 +49,7 @@ void Turtle::setNewDestintion(){
 
 void Turtle::planPathToDestination(){
 
+  // convert the positions into arrays for the AStar ABI
   int init[2] = {(int)_currentPos.y,(int)_currentPos.x};
   int goal[2] = {(int)_destination.y,(int)_destination.x};
   std::cout << getId() << " -- init: " << init[0] << " " << init[1] << std::endl;
@@ -58,7 +59,11 @@ void Turtle::planPathToDestination(){
   AStar astar;
   bool result = false;
   std::unique_lock<std::mutex> logic_lck(_logic_mutex);
+  // try to calulate a route until it is successful
   while (result != true) {
+    // in order to get the shortest route to the destination for each field the parent field is stored
+    // and after astar reaches the destination you will get the full path by going back parent field by parent field until the init field is reached
+    // For this the 2D vector pathWithParent is used and later on this vector gets converted into the _pathToDest see further down
     result = astar.Search(_mapHandle->getMap(), pathWithParent, init, goal);
     if (!result){
       logic_lck.unlock();
@@ -68,14 +73,6 @@ void Turtle::planPathToDestination(){
       logic_lck.lock();
     }
   }
-  // std::cout << "pathWithParent Size:" << pathWithParent.size() << std::endl;
-  // std::for_each(pathWithParent.begin(), pathWithParent.end(), [](std::vector<Position> &fieldWithParent) {
-  //   // /std::cout << "Size:" << fieldWithParent.size() << std::endl;
-  //   std::cout << "Pos:" << fieldWithParent.at(0).x;
-  //   std::cout << " " << fieldWithParent[0].y << std::endl;
-  //   std::cout << "Parent Pos:" << fieldWithParent[1].x;
-  //   std::cout << " " << fieldWithParent[1].y << std::endl;
-  // });
 
   auto next = pathWithParent.back();
   Position pos = next.at(0);
@@ -85,7 +82,7 @@ void Turtle::planPathToDestination(){
   std::lock_guard<std::mutex> lck(_path_mutex);
   _pathToDest.clear();
   _pathToDest.insert(_pathToDest.begin(), pos);
-
+  // here the path to destination is derived from the pathWithParent vector
   while (parent != pos) {
     pos = parent;
     _pathToDest.insert(_pathToDest.begin(), pos);
@@ -99,12 +96,6 @@ void Turtle::planPathToDestination(){
     }
   }
   _mapHandle->reservePathInMap(_pathToDest);
-
-  // std::for_each(_pathToDest.begin(), _pathToDest.end(), [](Position &pos) {
-  //   // /std::cout << "Size:" << fieldWithParent.size() << std::endl;
-  //   std::cout << "Path Pos:" << pos.x;
-  //   std::cout << " " << pos.y << std::endl;
-  // });
 }
 
 void Turtle::run(){

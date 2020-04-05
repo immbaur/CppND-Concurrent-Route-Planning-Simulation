@@ -24,7 +24,7 @@ private:
   void drawTurtlePath(cv::Mat &dynamicMap, std::shared_ptr<Turtle> &turtlePtr);
 
   double _multiplier;
-  cv::Mat staticMap;
+  cv::Mat _staticMap;
   std::string _windowName;
   std::shared_ptr<Map> _mapHandle;
 

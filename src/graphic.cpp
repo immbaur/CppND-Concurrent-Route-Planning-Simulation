@@ -7,7 +7,7 @@ Graphic::Graphic(std::shared_ptr<Map> m){
 }
 
 void Graphic::updateGraphic(std::vector<std::shared_ptr<Turtle>> turtles){
-  cv::Mat dynamicMap = staticMap.clone();
+  cv::Mat dynamicMap = _staticMap.clone();
 
   std::for_each(turtles.begin(), turtles.end(), [&dynamicMap, this](std::shared_ptr<Turtle> &turtlePtr){
     drawTurtlePosition(dynamicMap, turtlePtr);
@@ -24,10 +24,10 @@ void Graphic::setupWorld(){
   cv::namedWindow( _windowName, cv::WINDOW_AUTOSIZE );
 
   // creat a static map that contains the obstacles only
-  staticMap = cv::Mat(_mapHandle->rowSize*_multiplier, _mapHandle->colSize*_multiplier, CV_8UC3, cv::Scalar(0,0,0));
+  _staticMap = cv::Mat(_mapHandle->rowSize()*_multiplier, _mapHandle->colSize()*_multiplier, CV_8UC3, cv::Scalar(0,0,0));
   // iterate throu all map fields
-  for (int y=0; y<_mapHandle->rowSize; y++){
-    for (int x=0; x<_mapHandle->colSize; x++){
+  for (int y=0; y<_mapHandle->rowSize(); y++){
+    for (int x=0; x<_mapHandle->colSize(); x++){
       // check if obstacle exist on field
       if (_mapHandle->getMap()[y][x] == State::kObstacle)
         // instert obstacle in the world
@@ -40,7 +40,7 @@ void Graphic::drawObstacle(double x, double y){
   double _x = x*_multiplier+_multiplier/2;
   double _y = y*_multiplier+_multiplier/2;
   double _r = _multiplier/2;
-  cv::circle(staticMap, cv::Point(_x,_y), _r, cv::Scalar(255,255,255), -1, 8, 0);
+  cv::circle(_staticMap, cv::Point(_x,_y), _r, cv::Scalar(255,255,255), -1, 8, 0);
 }
 
 void Graphic::drawTurtlePosition(cv::Mat &dynamicMap, std::shared_ptr<Turtle> &turtlePtr){

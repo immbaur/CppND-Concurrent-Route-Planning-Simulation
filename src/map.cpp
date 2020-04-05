@@ -14,8 +14,8 @@ Map::Map(std::string pathToGrid){
     std::cerr << "File not found!" << std::endl;
   }
   // set the row size and column size of the map
-  rowSize = _map.size();
-  colSize = _map[1].size();
+  _rowSize = _map.size();
+  _colSize = _map[1].size();
 }
 
 void Map::reservePathInMap(std::vector<Position> &path){
@@ -44,8 +44,8 @@ Position Map::getRandPos(bool reserve){
   Position pos;
   std::lock_guard<std::mutex> lck(_map_mutex);
   while (state != State::kEmpty){
-    pos.x = rand()%colSize;
-    pos.y = rand()%rowSize;
+    pos.x = rand()%_colSize;
+    pos.y = rand()%_rowSize;
     state = _map[pos.y][pos.x];
   }
   if(reserve)
