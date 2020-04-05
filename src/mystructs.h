@@ -17,9 +17,9 @@ struct Position {
 };
 
 struct Color {
-  double r;
-  double g;
-  double b;
+  int r;
+  int g;
+  int b;
 };
 
 
