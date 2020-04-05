@@ -1,4 +1,12 @@
 #include "graphic.h"
+// #include <iomanip>
+
+// std::string to_zero_lead(const int value, const unsigned precision)
+// {
+//      std::ostringstream oss;
+//      oss << std::setw(precision) << std::setfill('0') << value;
+//      return oss.str();
+// }
 
 Graphic::Graphic(std::shared_ptr<Map> m){
   _mapHandle = m;
@@ -14,6 +22,13 @@ void Graphic::updateGraphic(std::vector<std::shared_ptr<Turtle>> turtles){
     drawTurtleDestination(dynamicMap, turtlePtr);
     drawTurtlePath(dynamicMap, turtlePtr);
   });
+  // static int cnt = 0;
+  // if (cnt % 2 == 0){
+  //   std::cout << "cnt:" << std::to_string(cnt)<< '\n';
+  //   cv::imwrite("images/some_" + to_zero_lead(cnt,4) + ".jpg", dynamicMap);
+  // }
+  // cv::imwrite("images/some_" + std::to_string(cnt) + ".jpg", dynamicMap);
+  // cnt++;
   cv::imshow(_windowName, dynamicMap);
   cv::waitKey(33);
 }

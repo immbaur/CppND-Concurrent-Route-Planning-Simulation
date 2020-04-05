@@ -1,4 +1,7 @@
 # CppND-Concurrent-Route-Planning-Simulation
+
+<img src="data/animatedTurtleTrafic.gif"/>
+
 Multithreading application for parallel planning and navigation using C++ with CMake
 
 ## Dependencies for Running Locally
